@@ -4,32 +4,32 @@
 
     <div style="margin: 10px 0">
       <el-input
-        type="text"
-        suffix-icon="el-icon-search"
-        style="width: 200px"
-        placeholder="请输入客户名称"
-        v-model="cusName"
+          type="text"
+          suffix-icon="el-icon-search"
+          style="width: 200px"
+          placeholder="请输入客户名称"
+          v-model="cusName"
       ></el-input>
       <el-input
-        type="text"
-        suffix-icon="el-icon-message"
-        style="width: 200px"
-        placeholder="请输入联系方式"
-        v-model="cusPhone"
-        class="ml-5"
+          type="text"
+          suffix-icon="el-icon-message"
+          style="width: 200px"
+          placeholder="请输入联系方式"
+          v-model="cusPhone"
+          class="ml-5"
       ></el-input>
       <el-select
-        clearable
-        v-model="cusSort"
-        placeholder="请选择客户类型"
-        style="width: 200px"
-        class="ml-5"
+          clearable
+          v-model="cusSort"
+          placeholder="请选择客户类型"
+          style="width: 200px"
+          class="ml-5"
       >
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
         >
         </el-option>
       </el-select>
@@ -39,44 +39,45 @@
 
     <div style="margin: 10px 0">
       <el-button type="primary" @click="handleAdd"
-        >新增<i class="el-icon-circle-plus-outline"></i
+      >新增<i class="el-icon-circle-plus-outline"></i
       ></el-button>
 
       <el-popconfirm
-        class="ml-5"
-        confirm-button-text="确定"
-        cancel-button-text="我再想想"
-        icon="el-icon-info"
-        icon-color="red"
-        title="您确定批量删除这新数据吗？"
-        @confirm="delBatch"
+          class="ml-5"
+          confirm-button-text="确定"
+          cancel-button-text="我再想想"
+          icon="el-icon-info"
+          icon-color="red"
+          title="您确定批量删除这新数据吗？"
+          @confirm="delBatch"
       >
         <el-button type="danger" slot="reference"
-          >批量删除<i class="el-icon-remove-outline"></i
+        >批量删除<i class="el-icon-remove-outline"></i
         ></el-button>
       </el-popconfirm>
 
       <el-upload
-        action="http://localhost:9090/customer/import"
-        :show-file-list="false"
-        accept="xlsx"
-        style="display: inline-block"
-        :on-success="handleExcelImportSuccess"
+          action="http://localhost:9090/customer/import"
+          :show-file-list="false"
+          accept="xlsx"
+          style="display: inline-block"
+          :on-success="handleExcelImportSuccess"
       >
         <el-button type="primary" class="ml-5"
-          >导入<i class="el-icon-bottom"></i
+        >导入<i class="el-icon-bottom"></i
         ></el-button>
       </el-upload>
       <el-button type="primary" class="ml-5" @click="exp"
-        >导出<i class="el-icon-top"></i
+      >导出<i class="el-icon-top"></i
       ></el-button>
+      <el-button type="primary" class="ml-5" @click="analyzeCustomer">客户画像分析</el-button>
     </div>
     <el-table
-      :data="tableData"
-      border
-      stripe
-      :header-cell-class-name="'headerBg'"
-      @selection-change="handleSelectionChange"
+        :data="tableData"
+        border
+        stripe
+        :header-cell-class-name="'headerBg'"
+        @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="客户编号"> </el-table-column>
@@ -89,19 +90,19 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="success" @click="handleEdit(scope.row)"
-            >编辑<i class="el-icon-edit"></i
+          >编辑<i class="el-icon-edit"></i
           ></el-button>
           <el-popconfirm
-            class="ml-5"
-            confirm-button-text="确定"
-            cancel-button-text="我再想想"
-            icon="el-icon-info"
-            icon-color="red"
-            title="您确定删除吗？"
-            @confirm="handleDel(scope.row.id)"
+              class="ml-5"
+              confirm-button-text="确定"
+              cancel-button-text="我再想想"
+              icon="el-icon-info"
+              icon-color="red"
+              title="您确定删除吗？"
+              @confirm="handleDel(scope.row.id)"
           >
             <el-button type="danger" slot="reference"
-              >删除<i class="el-icon-remove-outline"></i
+            >删除<i class="el-icon-remove-outline"></i
             ></el-button>
           </el-popconfirm>
         </template>
@@ -110,45 +111,58 @@
 
     <div style="padding: 10px 0">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageNum"
-        :page-sizes="[2, 5, 10, 20]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageNum"
+          :page-sizes="[2, 5, 10, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
       >
       </el-pagination>
     </div>
+
+    <!-- 客户画像分析结果 -->
+    <div v-if="analysisResult">
+      <h3>客户所在城市分布</h3>
+      <ul>
+        <li v-for="(count, city) in analysisResult.cityDistribution" :key="city">
+          {{ city }}: {{ count }} 人
+        </li>
+      </ul>
+      <h3>客户平均花费</h3>
+      <p>{{ analysisResult.averageCost.toFixed(2) }}</p>
+    </div>
+
     <!-- 弹窗 -->
     <el-dialog
-      title="新增或编辑客户信息"
-      :visible.sync="dialogFormVisible"
-      width="30%"
+        title="新增或编辑客户信息"
+        :visible.sync="dialogFormVisible"
+        width="30%"
     >
       <el-form
-        :model="form"
-        status-icon
-        :rules="rules"
-        ref="ruleForm"
-        label-width="90px"
-        size="small"
+          :model="form"
+          status-icon
+          :rules="rules"
+          ref="ruleForm"
+          label-width="90px"
+          size="small"
       >
         <el-form-item label="客户名称" prop="cusName">
           <el-input v-model="form.cusName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="类别" prop="cusSort">
           <el-select
-            clearable
-            v-model="form.cusSort"
-            placeholder="请选择"
-            style="width: 100%"
+              clearable
+              v-model="form.cusSort"
+              placeholder="请选择"
+              style="width: 100%"
           >
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
             >
             </el-option>
           </el-select>
@@ -215,7 +229,9 @@ export default {
           //与prop="supName"对应
           { required: true, message: "名称不能为空", trigger: "blur" },
         ],
-        cusSort: [{ required: true, message: "类别不能为空", trigger: "blur" }],
+        cusSort: [
+          { required: true, message: "类别不能为空", trigger: "blur" },
+        ],
         cusPhone: [
           { required: true, message: "联系方式不能为空", trigger: "blur" },
           {
@@ -236,6 +252,7 @@ export default {
           { type: "number", message: "请输入数字", trigger: "blur" },
         ],
       },
+      analysisResult: null,
     };
   },
   created() {
@@ -246,19 +263,19 @@ export default {
     load() {
       //请求分页查询数据
       this.request
-        .get("/customer/page", {
-          params: {
-            pageNum: this.pageNum,
-            pageSize: this.pageSize,
-            cusName: this.cusName,
-            cusPhone: this.cusPhone,
-            cusSort: this.cusSort,
-          },
-        })
-        .then((res) => {
-          this.tableData = res.data.records;
-          this.total = res.data.total;
-        });
+          .get("/customer/page", {
+            params: {
+              pageNum: this.pageNum,
+              pageSize: this.pageSize,
+              cusName: this.cusName,
+              cusPhone: this.cusPhone,
+              cusSort: this.cusSort,
+            },
+          })
+          .then((res) => {
+            this.tableData = res.data.records;
+            this.total = res.data.total;
+          });
     },
     //表单校验
     save() {
@@ -341,6 +358,16 @@ export default {
     handleExcelImportSuccess() {
       this.$message.success("导入成功");
       this.load();
+    },
+    // 客户画像分析
+    analyzeCustomer() {
+      this.request.get("/customer/analysis").then((res) => {
+        if (res.code === "200") {
+          this.analysisResult = res.data;
+        } else {
+          this.$message.error("获取客户画像分析数据失败");
+        }
+      });
     },
   },
 };

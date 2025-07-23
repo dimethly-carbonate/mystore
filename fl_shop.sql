@@ -783,31 +783,7 @@ INSERT INTO `fl_customer` (`cus_name`, `cus_sort`, `cus_phone`, `cus_address`, `
 -- ----------------------------
 -- Table structure for fl_foster
 -- ----------------------------
-DROP TABLE IF EXISTS `fl_after_sales`;
-CREATE TABLE `fl_after_sales` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `sender` varchar(10) NOT NULL COMMENT '申请人',
-  `phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '联系方式',
-  `fos_Name` varchar(20) NOT NULL COMMENT '报修商品名称',
-  `fos_Variety` varchar(10) NOT NULL COMMENT '种类',
-  `fos_Url` varchar(225) NOT NULL COMMENT '图片',
-  `fos_Note` varchar(225) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '备注',
-  `fos_Starttime` date NOT NULL COMMENT '开始日期',
-  `fos_Endtime` date DEFAULT NULL COMMENT '结束日期',
-  `fos_Price` double NOT NULL COMMENT '单价',
-  `fos_Total` double DEFAULT NULL COMMENT '总价',
-  `fos_Status` varchar(3) NOT NULL COMMENT '支付状态',
-  `fos_Oper` varchar(10) NOT NULL COMMENT '操作人',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
-
--- ----------------------------
--- Records of fl_after_sales
--- ----------------------------
-INSERT INTO `fl_after_sales` (`sender`, `phone`, `fos_Name`, `fos_Variety`, `fos_Url`, `fos_Note`, `fos_Starttime`, `fos_Endtime`, `fos_Price`, `fos_Total`, `fos_Status`, `fos_Oper`) VALUES ('张三', '13800138000', '维斯塔潘帽子', '帽子', 'https://picsum.photos/200/300?random=1', '帽檐破损', '2025-01-01', '2025-01-05', 80, 100, '已支付', '李四');
-
-INSERT INTO `fl_after_sales` (`sender`, `phone`, `fos_Name`, `fos_Variety`, `fos_Url`, `fos_Note`, `fos_Starttime`, `fos_Endtime`, `fos_Price`, `fos_Total`, `fos_Status`, `fos_Oper`) VALUES ('李四', '13900139000', '维斯塔潘车模', '车模', 'https://picsum.photos/200/300?random=2', '车轮脱落', '2025-01-02', '2025-01-07', 350, 500, '已支付', '王五');
-
+/
 INSERT INTO `fl_after_sales` (`sender`, `phone`, `fos_Name`, `fos_Variety`, `fos_Url`, `fos_Note`, `fos_Starttime`, `fos_Endtime`, `fos_Price`, `fos_Total`, `fos_Status`, `fos_Oper`) VALUES ('王五', '13700137000', '诺里斯帽子', '帽子', 'https://picsum.photos/200/300?random=3', '标志脱落', '2025-01-03', '2025-01-10', 75, 100, '未支付', '赵六');
 
 INSERT INTO `fl_after_sales` (`sender`, `phone`, `fos_Name`, `fos_Variety`, `fos_Url`, `fos_Note`, `fos_Starttime`, `fos_Endtime`, `fos_Price`, `fos_Total`, `fos_Status`, `fos_Oper`) VALUES ('赵六', '13600136000', '诺里斯车模', '车模', 'https://picsum.photos/200/300?random=4', '后视镜损坏', '2025-01-04', '2025-01-12', 320, 450, '已支付', '钱七');
